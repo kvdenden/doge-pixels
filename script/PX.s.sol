@@ -7,6 +7,7 @@ import {
     TransparentUpgradeableProxy
 } from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import {PX} from "../src/PX.sol";
+import {PX_V2} from "../src/PX_V2.sol";
 
 contract Deploy is Script {
     function setUp() public {}
@@ -21,7 +22,7 @@ contract Deploy is Script {
 
         vm.startBroadcast(deployerPrivateKey);
 
-        PX implementation = new PX{salt: "0x1"}();
+        address implementation = address(new PX{salt: "0x1"}());
         bytes memory data = abi.encodeCall(
             PX.__PX_init, ("Pixels of The Doge NFT", "PX", dog20, baseURI, 640, 480, deployer, vm.addr(111))
         );
@@ -44,8 +45,8 @@ contract Upgrade is Script {
 
         ITransparentUpgradeableProxy proxy = ITransparentUpgradeableProxy(vm.envAddress("PX_ADDRESS"));
 
-        PX newImplementation = new PX{salt: "0x2"}();
-        proxy.upgradeTo(address(newImplementation));
+        address newImplementation = address(new PX_V2{salt: "0x2"}());
+        proxy.upgradeTo(newImplementation);
 
         vm.stopBroadcast();
     }

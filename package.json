@@ -5,9 +5,13 @@
   "private": true,
   "scripts": {
     "devnet": "anvil",
-    "dog20:deploy": "forge script script/DOG20.s.sol:Deploy --rpc-url http://localhost:8545 --broadcast",
+    "clean": "forge clean",
+    "build": "forge build",
+    "test": "forge test",
+    "dog:deploy": "forge script script/DOG20.s.sol:Deploy --rpc-url http://localhost:8545 --broadcast",
     "px:deploy": "forge script script/PX.s.sol:Deploy --rpc-url http://localhost:8545 --broadcast",
-    "px:upgrade": "forge script script/PX.s.sol:Upgrade --rpc-url http://localhost:8545 --broadcast"
+    "px:upgrade": "forge script script/PX.s.sol:Upgrade --rpc-url http://localhost:8545 --broadcast",
+    "px:validate": "forge clean && forge build && npx @openzeppelin/upgrades-core validate --contract PX_V2"
   },
   "devDependencies": {
     "@openzeppelin/contracts": "^4.9.5",
