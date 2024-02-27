@@ -3,8 +3,15 @@
   "version": "0.0.1",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "devnet": "anvil",
+    "dog20:deploy": "forge script script/DOG20.s.sol:Deploy --rpc-url http://localhost:8545 --broadcast",
+    "px:deploy": "forge script script/PX.s.sol:Deploy --rpc-url http://localhost:8545 --broadcast",
+    "px:upgrade": "forge script script/PX.s.sol:Upgrade --rpc-url http://localhost:8545 --broadcast"
+  },
   "devDependencies": {
     "@openzeppelin/contracts": "^4.9.5",
-    "@openzeppelin/contracts-upgradeable": "4.9.5"
+    "@openzeppelin/contracts-upgradeable": "4.9.5",
+    "@openzeppelin/upgrades-core": "^1.32.5"
   }
 }

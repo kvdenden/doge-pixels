@@ -98,6 +98,7 @@ contract PX is Initializable, ERC721Upgradeable {
         // !!!! WARNING !!!! !!!! WARNING !!!! !!!! WARNING !!!! !!!! WARNING !!!! !!!! WARNING !!!! !!!! WARNING !!!!
         // !!!! WARNING !!!! _MINT DOES NOT HANDLE TRANSFERING $DOG, PARENT FUNCTION MUST SEND THE TRANSACTION
         // !!!! WARNING !!!! !!!! WARNING !!!! !!!! WARNING !!!! !!!! WARNING !!!! !!!! WARNING !!!! !!!! WARNING !!!!
+
     }
 
     /**
@@ -111,6 +112,7 @@ contract PX is Initializable, ERC721Upgradeable {
      * Emits a {Transfer} event.
      */
     function _burn(uint256 pupper) internal virtual override {
+
         // First part: custom PX _burn() logic
 
         require(pupper != MAGIC_NULL, "Pupper is magic");
@@ -131,6 +133,7 @@ contract PX is Initializable, ERC721Upgradeable {
         // !!!! WARNING !!!! !!!! WARNING !!!! !!!! WARNING !!!! !!!! WARNING !!!! !!!! WARNING !!!! !!!! WARNING !!!!
         // !!!! WARNING !!!! _BURN DOES NOT HANDLE TRANSFERING $DOG, PARENT FUNCTION MUST SEND THE TRANSACTION
         // !!!! WARNING !!!! !!!! WARNING !!!! !!!! WARNING !!!! !!!! WARNING !!!! !!!! WARNING !!!! !!!! WARNING !!!!
+
     }
 
     //
@@ -149,18 +152,17 @@ contract PX is Initializable, ERC721Upgradeable {
     // - https://stackoverflow.com/questions/58188832/solidity-generate-unpredictable-random-number-that-does-not-depend-on-input
     //
     function randYish() public view returns (uint256 ret) {
-        uint256 seed = uint256(
-            keccak256(
-                abi.encodePacked(
-                    block.timestamp + block.difficulty
-                        + ((uint256(keccak256(abi.encodePacked(block.coinbase)))) / (block.timestamp)) + block.gaslimit
-                        + ((uint256(keccak256(abi.encodePacked(_msgSender())))) / (block.timestamp)) + block.number
-                        + puppersRemaining
-                )
-            )
-        );
+        uint256 seed = uint256(keccak256(abi.encodePacked(
+                block.timestamp + block.difficulty +
+                ((uint256(keccak256(abi.encodePacked(block.coinbase)))) / (block.timestamp)) +
+                block.gaslimit +
+                ((uint256(keccak256(abi.encodePacked(_msgSender())))) / (block.timestamp)) +
+                block.number +
+                puppersRemaining
+            )));
         ret = seed;
     }
+
 
     //
     // randYishInRange
@@ -240,9 +242,11 @@ contract PX is Initializable, ERC721Upgradeable {
     // Description:
     // Returns pixel index on .png from tokenId
     //
-    function pupperToPixel(uint256 pupper) public view returns (uint256) {
+    function pupperToPixel(uint256 pupper) view public returns (uint256){
         return pupper - INDEX_OFFSET;
     }
+
+
 
     //
     // pupperToPixelCoords
@@ -250,7 +254,7 @@ contract PX is Initializable, ERC721Upgradeable {
     // Description:
     // Returns pixel x,y on .png from tokenId
     //
-    function pupperToPixelCoords(uint256 pupper) public view returns (uint256[2] memory) {
+    function pupperToPixelCoords(uint256 pupper) view public returns (uint256[2] memory) {
         uint256 index = pupper - INDEX_OFFSET;
         return [index % SHIBA_WIDTH, index / SHIBA_WIDTH];
     }
@@ -260,7 +264,7 @@ contract PX is Initializable, ERC721Upgradeable {
      * token will be the concatenation of the `baseURI` and the `tokenId`. Empty
      * by default, can be overriden in child contracts.
      */
-    function _baseURI() internal view virtual override returns (string memory) {
+    function _baseURI() internal view virtual override returns (string memory){
         return BASE_URI;
     }
 
@@ -274,12 +278,6 @@ contract PX is Initializable, ERC721Upgradeable {
 
         string memory baseURI = _baseURI();
         uint256 shard = 1 + (tokenId - INDEX_OFFSET) / 5000;
-        return bytes(baseURI).length > 0
-            ? string(
-                abi.encodePacked(
-                    baseURI, "metadata-sh", Strings.toString(shard), "/", "metadata-", Strings.toString(tokenId), ".json"
-                )
-            )
-            : "";
+        return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, "metadata-sh", Strings.toString(shard), "/", "metadata-", Strings.toString(tokenId) , ".json")) : "";
     }
 }
