@@ -1,0 +1,10 @@
+{
+  "name": "doge-pixels",
+  "version": "0.0.1",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@openzeppelin/contracts": "^4.9.5",
+    "@openzeppelin/contracts-upgradeable": "4.9.5"
+  }
+}
