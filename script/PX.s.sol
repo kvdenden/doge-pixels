@@ -22,13 +22,12 @@ contract Deploy is Script {
 
         vm.startBroadcast(deployerPrivateKey);
 
-        address implementation = address(new PX{salt: "0x1"}());
+        address implementation = address(new PX());
         bytes memory data = abi.encodeCall(
             PX.__PX_init, ("Pixels of The Doge NFT", "PX", dog20, baseURI, 640, 480, deployer, vm.addr(111))
         );
 
-        TransparentUpgradeableProxy proxy =
-            new TransparentUpgradeableProxy{salt: "0x0"}(address(implementation), deployer, data);
+        TransparentUpgradeableProxy proxy = new TransparentUpgradeableProxy(address(implementation), deployer, data);
         console.log("PX proxy deployed to address: ", address(proxy));
 
         vm.stopBroadcast();
@@ -41,11 +40,14 @@ contract Upgrade is Script {
     function run() public {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
 
+        address bridge = vm.envAddress("PXBRIDGE_L1_ADDRESS");
+
         vm.startBroadcast(deployerPrivateKey);
 
         ITransparentUpgradeableProxy proxy = ITransparentUpgradeableProxy(vm.envAddress("PX_ADDRESS"));
 
-        address newImplementation = address(new PX_V2{salt: "0x2"}());
+        address newImplementation = address(new PX_V2());
+        bytes memory data = abi.encodeCall(PX_V2.__PX_V2_init, (bridge));
         proxy.upgradeTo(newImplementation);
 
         vm.stopBroadcast();

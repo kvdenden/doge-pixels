@@ -12,7 +12,7 @@ contract Deploy is Script {
 
         vm.startBroadcast(deployerPrivateKey);
 
-        DOG20 dog20 = new DOG20{salt: "0xd06"}(); // deploy with create2
+        DOG20 dog20 = new DOG20();
         console.log("DOG20 deployed to address: ", address(dog20));
 
         vm.stopBroadcast();
