@@ -48,7 +48,7 @@ contract Upgrade is Script {
 
         address newImplementation = address(new PX_V2());
         bytes memory data = abi.encodeCall(PX_V2.__PX_V2_init, (bridge));
-        proxy.upgradeTo(newImplementation);
+        proxy.upgradeToAndCall(newImplementation, data);
 
         vm.stopBroadcast();
     }
