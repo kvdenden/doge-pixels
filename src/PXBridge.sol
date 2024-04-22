@@ -3,15 +3,11 @@ pragma solidity ^0.8.13;
 
 import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
+import {IPXBridge} from "./interfaces/IPXBridge.sol";
+
 interface ICrossDomainMessenger {
     function xDomainMessageSender() external view returns (address);
     function sendMessage(address _target, bytes calldata _message, uint32 _gasLimit) external;
-}
-
-interface IPXBridge {
-    event Bridge(uint256 indexed tokenId);
-
-    function bridge(uint256 tokenId) external;
 }
 
 contract PXBridgeL1 is IPXBridge {
