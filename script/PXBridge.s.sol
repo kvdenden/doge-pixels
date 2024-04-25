@@ -4,6 +4,7 @@ pragma solidity ^0.8.13;
 import {Script, console} from "forge-std/Script.sol";
 
 import {PXBridgeL1, PXBridgeL2} from "../src/PXBridge.sol";
+import {BridgedPX} from "../src/BridgedPX.sol";
 
 contract DeployL1 is Script {
     function setUp() public {}
@@ -17,7 +18,8 @@ contract DeployL1 is Script {
 
         vm.startBroadcast(deployerPrivateKey);
 
-        PXBridgeL1 bridge = new PXBridgeL1{salt: "0x0"}(messenger, target, px);
+        PXBridgeL1 bridge = new PXBridgeL1(messenger, px);
+        bridge.setTarget(target);
         console.log("PX bridge L1 deployed to address: ", address(bridge));
 
         vm.stopBroadcast();
@@ -32,10 +34,13 @@ contract DeployL2 is Script {
 
         address messenger = 0x4200000000000000000000000000000000000007; // L2CrossDomainMessenger
         address source = vm.envAddress("PXBRIDGE_L1_ADDRESS");
+        address px = vm.envAddress("PX_L2_ADDRESS");
 
         vm.startBroadcast(deployerPrivateKey);
 
-        PXBridgeL2 bridge = new PXBridgeL2{salt: "0x0"}(messenger, source);
+        PXBridgeL2 bridge = new PXBridgeL2(messenger);
+        bridge.setSource(source);
+        bridge.setCallback(px, BridgedPX.bridgePupper.selector);
         console.log("PX bridge L2 deployed to address: ", address(bridge));
 
         vm.stopBroadcast();
