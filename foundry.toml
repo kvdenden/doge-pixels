@@ -2,7 +2,7 @@
 solc_version = "0.8.23"
 optimizer = true
 optimizer_runs = 10_000
-ignored_warnings_from = ["src/PX.sol"]
+ignored_warnings_from = ["src/PX.sol", "src/BridgedPX.sol"]
 
 build_info = true
 extra_output = ["storageLayout"]
@@ -11,3 +11,11 @@ extra_output = ["storageLayout"]
 [fmt]
 line_length = 120
 tab_width = 4
+
+[rpc_endpoints]
+sepolia = "https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}"
+base_sepolia = "https://base-sepolia.g.alchemy.com/v2/${BASE_ALCHEMY_API_KEY}"
+
+[etherscan]
+sepolia = { key = "${BLOCK_EXPLORER_API_KEY}" }
+base_sepolia = { key = "${BASE_BLOCK_EXPLORER_API_KEY}" }

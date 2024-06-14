@@ -16,6 +16,9 @@ contract Deploy is Script {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         address deployer = vm.addr(deployerPrivateKey);
 
+        address dev = vm.envAddress("DEV_L1_ADDRESS");
+        address pleasr = vm.envAddress("PLEASR_L1_ADDRESS");
+
         address dog20 = vm.envAddress("DOG20_ADDRESS");
         string memory baseURI =
             "https://therealdoge.mypinata.cloud/ipfs/QmSjRs4dH5q2wV5mqY4ujpXNQByYyvf2A8pk6sUXgCA3QQ/";
@@ -23,9 +26,8 @@ contract Deploy is Script {
         vm.startBroadcast(deployerPrivateKey);
 
         address implementation = address(new PX());
-        bytes memory data = abi.encodeCall(
-            PX.__PX_init, ("Pixels of The Doge NFT", "PX", dog20, baseURI, 640, 480, deployer, vm.addr(111))
-        );
+        bytes memory data =
+            abi.encodeCall(PX.__PX_init, ("Pixels of The Doge NFT", "PX", dog20, baseURI, 640, 480, dev, pleasr));
 
         TransparentUpgradeableProxy proxy = new TransparentUpgradeableProxy(address(implementation), deployer, data);
         console.log("PX proxy deployed to address: ", address(proxy));

@@ -8,7 +8,7 @@
     "clean": "forge clean",
     "build": "forge build",
     "test": "forge test",
-    "deploy": "yarn dog:deploy && yarn px:deploy && yarn dog:deploy:l2 && yarn bridge:deploy && yarn bridge:deploy:l2 && yarn px:deploy:l2 && yarn px:upgrade",
+    "deploy": "yarn dog:deploy && yarn px:deploy && yarn dog:deploy:l2 && yarn bridge:deploy && yarn bridge:deploy:l2 && yarn px:deploy:l2 && yarn bridge:config && yarn bridge:config:l2 && yarn px:upgrade",
     "dog:deploy": "forge script script/DOG20.s.sol:Deploy --rpc-url http://localhost:8545 --broadcast",
     "dog:deploy:l2": "forge script script/DOG20.s.sol:DeployL2 --rpc-url http://localhost:9545 --broadcast",
     "px:deploy": "forge script script/PX.s.sol:Deploy --rpc-url http://localhost:8545 --broadcast",
@@ -16,7 +16,9 @@
     "px:validate": "forge clean && forge build && npx @openzeppelin/upgrades-core validate --contract PX_V2",
     "px:deploy:l2": "forge script script/BridgedPX.s.sol:Deploy --rpc-url http://localhost:9545 --broadcast",
     "bridge:deploy": "forge script script/PXBridge.s.sol:DeployL1 --rpc-url http://localhost:8545 --broadcast",
-    "bridge:deploy:l2": "forge script script/PXBridge.s.sol:DeployL2 --rpc-url http://localhost:9545 --broadcast"
+    "bridge:config": "forge script script/PXBridge.s.sol:ConfigL1 --rpc-url http://localhost:8545 --broadcast",
+    "bridge:deploy:l2": "forge script script/PXBridge.s.sol:DeployL2 --rpc-url http://localhost:9545 --broadcast",
+    "bridge:config:l2": "forge script script/PXBridge.s.sol:ConfigL2 --rpc-url http://localhost:9545 --broadcast"
   },
   "devDependencies": {
     "@eth-optimism/contracts-bedrock": "^0.17.1",

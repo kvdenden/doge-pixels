@@ -36,7 +36,7 @@ contract DeployL2 is Script {
         vm.startBroadcast(deployerPrivateKey);
 
         IOptimismMintableERC20Factory factory =
-            IOptimismMintableERC20Factory(0x4200000000000000000000000000000000000012);
+            IOptimismMintableERC20Factory(vm.envAddress("OPTIMISM_MINTABLE_ERC20_FACTORY"));
 
         address dog20OP = factory.createOptimismMintableERC20(dog20, "The Doge NFT", "DOG");
         console.log("Bridged DOG20 deployed to address: ", address(dog20OP));
