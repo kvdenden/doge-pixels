@@ -32,15 +32,13 @@ contract BridgedPXTest is Test {
 
     function setUp() public {
         address deployer = vm.addr(1337);
-        address dao = vm.addr(111);
 
         dog20 = new DOG20();
         bridge = new MockBridge();
 
         address implementation = address(new BridgedPX());
         bytes memory data = abi.encodeCall(
-            BridgedPX.__PX_init,
-            ("Pixels of The Doge NFT", "PX", address(dog20), "", 640, 480, deployer, dao, address(bridge))
+            BridgedPX.__PX_init, ("Pixels of The Doge NFT", "PX", address(dog20), "", 640, 480, address(bridge))
         );
         TransparentUpgradeableProxy proxy = new TransparentUpgradeableProxy(address(implementation), deployer, data);
 

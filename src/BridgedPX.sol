@@ -38,11 +38,6 @@ contract BridgedPX is Initializable, ERC721Upgradeable {
     uint256 public SHIBA_HEIGHT;
     string public BASE_URI;
 
-    address DOG20_FEES_ADDRESS_DEV;
-    address DOG20_FEES_ADDRESS_PLEASR;
-    uint256 DOG20_FEES_AMOUNT_DEV;
-    uint256 DOG20_FEES_AMOUNT_PLEASR;
-
     address public BRIDGE;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -55,8 +50,6 @@ contract BridgedPX is Initializable, ERC721Upgradeable {
         string memory ipfsUri_,
         uint256 width_,
         uint256 height_,
-        address DOG20_FEES_ADDRESS_DEV_,
-        address DOG20_FEES_ADDRESS_PLEASR_,
         address bridge_
     ) public initializer {
         __ERC721_init(name_, symbol_);
@@ -76,11 +69,6 @@ contract BridgedPX is Initializable, ERC721Upgradeable {
         // puppersRemaining = SHIBA_WIDTH * SHIBA_HEIGHT;
 
         BASE_URI = ipfsUri_;
-
-        DOG20_FEES_ADDRESS_DEV = DOG20_FEES_ADDRESS_DEV_;
-        DOG20_FEES_ADDRESS_PLEASR = DOG20_FEES_ADDRESS_PLEASR_;
-        DOG20_FEES_AMOUNT_DEV = 40;
-        DOG20_FEES_AMOUNT_PLEASR = 60;
 
         BRIDGE = bridge_;
     }
@@ -252,14 +240,7 @@ contract BridgedPX is Initializable, ERC721Upgradeable {
     }
 
     function processCollateralAfterBurn(uint256 totalAmount) internal {
-        // transfer collateral to the burner
-        // 1% is taken for fees, from that FEES_AMOUNT_DEV AND FEES_AMOUNT_PLEASR are distributed between developers and PleasrDAO
-        uint256 feesAmount1 = totalAmount * DOG20_FEES_AMOUNT_DEV / 100 / 100;
-        uint256 feesAmount2 = totalAmount * DOG20_FEES_AMOUNT_PLEASR / 100 / 100;
-        uint256 burnerAmount = totalAmount - feesAmount1 - feesAmount2;
-        DOG20.transfer(DOG20_FEES_ADDRESS_DEV, feesAmount1);
-        DOG20.transfer(DOG20_FEES_ADDRESS_PLEASR, feesAmount2);
-        DOG20.transfer(_msgSender(), burnerAmount);
+        DOG20.transfer(_msgSender(), totalAmount);
     }
 
     //
