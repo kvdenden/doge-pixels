@@ -58,6 +58,7 @@ contract PXBridgeTest is Test {
 
         vm.expectEmit();
         emit IPXBridge.Bridge(tokenId);
+
         _bridge(tokenId);
     }
 
@@ -72,6 +73,8 @@ contract PXBridgeTest is Test {
     }
 
     function _bridge(uint256 tokenId) internal {
-        messenger.sendMessage(address(bridge), abi.encodeWithSelector(PXBridgeL2.bridge.selector, tokenId), 100_000);
+        uint256[] memory tokenIds = new uint256[](1);
+        tokenIds[0] = tokenId;
+        messenger.sendMessage(address(bridge), abi.encodeWithSelector(PXBridgeL2.bridge.selector, tokenIds), 100_000);
     }
 }

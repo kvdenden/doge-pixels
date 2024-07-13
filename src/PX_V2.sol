@@ -18,6 +18,8 @@ contract PX_V2 is PX {
     function bridgePuppers(uint256 qty) external {
         require(qty <= puppersRemaining, "No puppers remaining");
 
+        uint256[] memory tokenIds = new uint256[](qty);
+
         uint256 LAST_INDEX = INDEX_OFFSET + puppersRemaining - 1;
         for (uint256 i; i < qty; ++i) {
             uint256 index = LAST_INDEX - i; // take last pupper
@@ -27,13 +29,11 @@ contract PX_V2 is PX {
             uint256 pupper = indexToPupper[index];
             pupperToIndex[pupper] = index; // TODO: do we need to do this?
 
-            _bridge(pupper);
+            emit Bridge(pupper);
+            tokenIds[i] = pupper;
         }
         puppersRemaining -= qty;
-    }
 
-    function _bridge(uint256 tokenId) internal {
-        IPXBridge(BRIDGE).bridge(tokenId);
-        emit Bridge(tokenId);
+        IPXBridge(BRIDGE).bridge(tokenIds);
     }
 }

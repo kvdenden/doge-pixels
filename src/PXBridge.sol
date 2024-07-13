@@ -12,22 +12,32 @@ contract PXBridgeL1 is IPXBridge, Ownable {
     address immutable PX;
 
     address L2_TARGET; // target contract on L2
+    uint32 GAS_LIMIT = 100_000; // gas per bridged token
 
     constructor(address messenger_, address px_) {
         MESSENGER = ICrossDomainMessenger(messenger_);
         PX = px_;
     }
 
-    function bridge(uint256 tokenId) external override {
+    function bridge(uint256[] memory tokenIds) external override {
         require(msg.sender == PX, "PXBridge: invalid sender");
         require(L2_TARGET != address(0), "PXBridge: target not set");
 
-        emit Bridge(tokenId);
-        MESSENGER.sendMessage(L2_TARGET, abi.encodeCall(IPXBridge.bridge, tokenId), 100_000); // TODO: estimate gas
+        for (uint256 i; i < tokenIds.length; ++i) {
+            emit Bridge(tokenIds[i]);
+        }
+
+        MESSENGER.sendMessage(
+            L2_TARGET, abi.encodeCall(IPXBridge.bridge, tokenIds), GAS_LIMIT * uint32(tokenIds.length)
+        );
     }
 
     function setTarget(address target) external onlyOwner {
         L2_TARGET = target;
+    }
+
+    function setGasLimit(uint32 gasLimit) external onlyOwner {
+        GAS_LIMIT = gasLimit;
     }
 }
 
@@ -49,18 +59,22 @@ contract PXBridgeL2 is IPXBridge, Ownable {
         MESSENGER = ICrossDomainMessenger(messenger_);
     }
 
-    function bridge(uint256 tokenId) external override {
+    function bridge(uint256[] memory tokenIds) external override {
         require(
             msg.sender == address(MESSENGER) && MESSENGER.xDomainMessageSender() == L1_SOURCE,
             "PXBridge: invalid sender"
         );
 
-        if (bridgedTokens.add(tokenId)) {
-            emit Bridge(tokenId);
+        for (uint256 i; i < tokenIds.length; ++i) {
+            uint256 tokenId = tokenIds[i];
 
-            if (callback.target != address(0)) {
-                (bool success,) = callback.target.call(abi.encodeWithSelector(callback.selector, tokenId));
-                require(success, "PXBridge: callback failed");
+            if (bridgedTokens.add(tokenId)) {
+                emit Bridge(tokenId);
+
+                if (callback.target != address(0)) {
+                    (bool success,) = callback.target.call(abi.encodeWithSelector(callback.selector, tokenId));
+                    require(success, "PXBridge: callback failed");
+                }
             }
         }
     }
