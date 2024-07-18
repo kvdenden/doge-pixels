@@ -21,3 +21,5 @@ base = "https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}"
 [etherscan]
 sepolia = { key = "${BLOCK_EXPLORER_API_KEY}" }
 base_sepolia = { key = "${BASE_BLOCK_EXPLORER_API_KEY}" }
+mainnet = { key = "${BLOCK_EXPLORER_API_KEY}" }
+base = { key = "${BASE_BLOCK_EXPLORER_API_KEY}" }

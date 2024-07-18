@@ -6,6 +6,7 @@ import {
     ITransparentUpgradeableProxy,
     TransparentUpgradeableProxy
 } from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
+import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import {PX} from "../src/PX.sol";
 import {PX_V2} from "../src/PX_V2.sol";
 
@@ -46,11 +47,12 @@ contract Upgrade is Script {
 
         vm.startBroadcast(deployerPrivateKey);
 
+        ProxyAdmin proxyAdmin = ProxyAdmin(vm.envAddress("PROXY_ADMIN_ADDRESS"));
         ITransparentUpgradeableProxy proxy = ITransparentUpgradeableProxy(vm.envAddress("PX_ADDRESS"));
 
         address newImplementation = address(new PX_V2());
         bytes memory data = abi.encodeCall(PX_V2.__PX_V2_init, (bridge));
-        proxy.upgradeToAndCall(newImplementation, data);
+        proxyAdmin.upgradeAndCall(proxy, newImplementation, data);
 
         vm.stopBroadcast();
     }
