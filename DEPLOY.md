@@ -69,4 +69,8 @@
 
 - forge script script/PX.s.sol:Upgrade --broadcast --verify --slow --rpc-url mainnet
 
+### bridge pixels
+
+- forge script script/PX.s.sol:Bridge --broadcast --verify --slow --rpc-url mainnet
+
 ### hand over bridge ownership

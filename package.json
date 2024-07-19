@@ -13,6 +13,7 @@
     "dog:deploy:l2": "forge script script/DOG20.s.sol:DeployL2 --rpc-url http://localhost:9545 --broadcast",
     "px:deploy": "forge script script/PX.s.sol:Deploy --rpc-url http://localhost:8545 --broadcast",
     "px:upgrade": "forge script script/PX.s.sol:Upgrade --rpc-url http://localhost:8545 --broadcast",
+    "px:bridge": "forge script script/PX.s.sol:Bridge --rpc-url http://localhost:8545 --broadcast",
     "px:validate": "forge clean && forge build && npx @openzeppelin/upgrades-core validate --contract PX_V2",
     "px:deploy:l2": "forge script script/BridgedPX.s.sol:Deploy --rpc-url http://localhost:9545 --broadcast",
     "bridge:deploy": "forge script script/PXBridge.s.sol:DeployL1 --rpc-url http://localhost:8545 --broadcast",
